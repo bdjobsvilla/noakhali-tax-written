@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Preparation - Tax Office</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --math-blue: #0984e3;
+            --math-gold: #fdcb6e;
+            --bg-dark: #1e272e;
+        }
+
+        body {
+            font-family: 'SolaimanLipi', Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            animation: fadeInDown 1.5s;
+        }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            transition: transform 0.4s;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--math-gold);
+        }
+
+        .question {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            color: var(--math-gold);
+            font-weight: bold;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1.1rem;
+            background: #f1f2f6;
+            color: #2f3542;
+        }
+
+        button {
+            padding: 12px 25px;
+            background: var(--math-blue);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #74b9ff;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: flipInX 0.6s;
+        }
+
+        .correct { background: rgba(46, 204, 113, 0.3); border: 1px solid #2ecc71; }
+        .wrong { background: rgba(231, 76, 60, 0.3); border: 1px solid #e74c3c; }
+
+        .explanation {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #ced4da;
+            line-height: 1.5;
+        }
+
+        .geometry {
+            position: fixed;
+            z-index: -1;
+            border: 1px solid rgba(255,255,255,0.05);
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(110vh) rotate(0deg); }
+            100% { transform: translateY(-20vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="math-bg"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>📐 গণিত প্রস্তুতি: কর অঞ্চল</h1>
+            <p>বিগত ২০২৩-২০২৬ সালের গুরুত্বপূর্ণ ৫০টি অংক</p>
+        </div>
+        <div id="quiz-list"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {q: "১. ১ থেকে ১০০ পর্যন্ত মৌলিক সংখ্যা কয়টি?", a: "২৫", e: "১ থেকে ১০০ পর্যন্ত ২৫টি মৌলিক সংখ্যা আছে।"},
+            {q: "২. ০.১ × ০.০১ × ০.০০১ = কত?", a: "০.০০MDAwMQ==", e: "দশমিকের পর মোট ৬টি ঘর হবে। সঠিক উত্তর: ০.০০MDAwMQ=="},
+            {q: "৩. x + y = 12 এবং x - y = 2 হলে, xy এর মান কত?", a: "৩৫", e: "xy = {(x+y)/2}² - {(x-y)/2}² = 6² - 1² = 35"},
+            {q: "৪. চিনির মূল্য ২৫% বৃদ্ধি পেলে ব্যবহার কত কমালে খরচ বাড়বে না?", a: "২০%", e: "সূত্র: {১০০r / (১০০+r)} = (১০০*২৫)/১২৫ = ২০%"},
+            {q: "৫. পিতা ও পুত্রের বয়সের সমষ্টি ৬০ বছর। পিতার বয়স পুত্রের ৪ গুণ হলে পুত্রের বয়স কত?", a: "১২", e: "পুত্রের বয়স x হলে, x + 4x = 60; ৫x = ৬০; x = ১২ বছর।"},
+            {q: "৬. বৃত্তের ব্যাস ৩ গুণ বৃদ্ধি করলে ক্ষেত্রফল কত গুণ বাড়বে?", a: "৯", e: "ক্ষেত্রফল ব্যাসার্ধ বা ব্যাসের বর্গের সমানুপাতিক (৩² = ৯)।"},
+            {q: "৭. ভাজক ভাগফলের ১০ গুণ; ভাজক ০.৫ হলে ভাগফল কত?", a: "০.০৫", e: "ভাগফল = ০.৫ / ১০ = ০.০৫।"},
+            {q: "৮. একটি আয়তাকার ক্ষেত্রের দৈর্ঘ্য ১০% বাড়ালে এবং প্রস্থ ১০% কমালে ক্ষেত্রফলের কী পরিবর্তন হবে?", a: "১% কমবে", e: "সূত্র: (a+b+ab/100) = ১০-১০-(১০০/১০০) = -১%।"},
+            {q: "৯. কোন আসল ৩ বছরে মুনাফা-আসলে ৪৬০ টাকা এবং ৫ বছরে ৫০০ টাকা হলে আসল কত?", a: "৪০০", e: "২ বছরের মুনাফা ৪০ টাকা। ১ বছরে ২০। ৩ বছরে ৬০। আসল ৪৬০-৬০=৪০০।"},
+            {q: "১০. x²-5x+6 এর উৎপাদক কোনটি?", a: "(x-2)(x-3)", e: "x²-3x-2x+6 = (x-3)(x-2)।"},
+            {q: "১১. চতুর্ভুজের চার কোণের সমষ্টি কত ডিগ্রি?", a: "৩৬০", e: "যেকোনো চতুর্ভুজের চার কোণের যোগফল ৪ সমকোণ।"},
+            {q: "১২. ১ থেকে ২০ পর্যন্ত সংখ্যাগুলোর যোগফল কত?", a: "২১০", e: "সূত্র: n(n+1)/2 = (২০*২১)/২ = ২১০।"},
+            {q: "১৩. কোন সংখ্যার ৬০% থেকে ৬০ বিয়োগ করলে ফলাফল ৬০ হয়?", a: "২০০", e: "০.৬x - ৬০ = ৬০; ০.৬x = ১২০; x = ২০০।"},
+            {q: "১৪. সমবাহু ত্রিভুজের প্রত্যেকটি কোণের মান কত?", a: "৬০", e: "১৮০/৩ = ৬০ ডিগ্রি।"},
+            {q: "১৫. এক হালি কলার দাম ২০ টাকা হলে, ৩ হালি কলার দাম কত?", a: "৬০", e: "২০ * ৩ = ৬০ টাকা।"},
+            {q: "১৬. লসাগু এর পূর্ণরূপ কী?", a: "লঘিষ্ঠ সাধারণ গুণিতক", e: "Least Common Multiple।"},
+            {q: "১৭. ত্রিভুজের ক্ষেত্রফল নির্ণয়ের সূত্র কী?", a: "১/২ × ভূমি × উচ্চতা", e: "সাধারণ ত্রিভুজের জন্য এটিই সূত্র।"},
+            {q: "১৮. ০, ১, ২, ৩ দ্বারা গঠিত বৃহত্তম ও ক্ষুদ্রতম সংখ্যার পার্থক্য কত?", a: "২১৮৭", e: "৩২১০ - ১০২৩ = ২১৮৭।"},
+            {q: "১৯. ১ মিটার কত ইঞ্চির সমান?", a: "৩৯.৩৭", e: "১ মিটার ≈ ৩৯.৩৭ ইঞ্চি।"},
+            {q: "২০. শতকরা বার্ষিক ৫ টাকা হার সুদে ৫০০ টাকার ৩ বছরের সুদ কত?", a: "৭৫", e: "I = Pnr = ৫০০ * ৩ * ০.০৫ = ৭৫।"},
+            {q: "২১. দুটি সংখ্যার গুণফল ১৫৩৬, লসাগু ৯৬ হলে গসাগু কত?", a: "১৬", e: "গসাগু = গুণফল / লসাগু = ১৫৩৬ / ৯৬ = ১৬।"},
+            {q: "২২. (a-b)² = কত?", a: "a²-2ab+b²", e: "বীজগণিতের বর্গের মৌলিক সূত্র।"},
+            {q: "২৩. ১ থেকে ১০ পর্যন্ত বিজোড় সংখ্যাগুলোর গড় কত?", a: "৫", e: "(১+৩+৫+৭+৯)/৫ = ২৫/৫ = ৫।"},
+            {q: "২৪. টাকায় ৩টি করে আম কিনে টাকায় ২টি করে বিক্রি করলে শতকরা কত লাভ হবে?", a: "৫০%", e: "লাভ হার = (১/২)*১০০ = ৫০%।"},
+            {q: "২৫. একটি ঘড়ি ৫৪০ টাকায় বিক্রি করায় ১০% ক্ষতি হলো। ঘড়িটির ক্রয়মূল্য কত?", a: "৬০০", e: "৯০% = ৫৪০ হলে ১০০% = ৬০০।"},
+            {q: "২৬. ০.৩ × ০.০৩ = কত?", a: "০.০০৯", e: "দশমিকের ঘর গুনে বসাতে হয়।"},
+            {q: "২৭. বৃত্তের পরিধির সূত্র কী?", a: "2πr", e: "যেখানে r ব্যাসার্ধ।"},
+            {q: "২৮. ২:৩ এর সমতুল অনুপাত কোনটি?", a: "৪:৬", e: "অনুপাতকে একই সংখ্যা দিয়ে গুণ।"},
+            {q: "২৯. লগ ১০ ভিত্তিক ১০০ এর মান কত?", a: "২", e: "১০² = ১০০, তাই মান ২।"},
+            {q: "৩০. ১ ইঞ্চি = কত সেন্টিমিটার?", a: "২.৫৪", e: "১ ইঞ্চি = ২.৫৪ সেমি।"},
+            {q: "৩১. রম্বসের ক্ষেত্রফল নির্ণয়ের সূত্র কী?", a: "১/২ × কর্ণদ্বয়ের গুণফল", e: "কর্ণদ্বয়ের গুণফলের অর্ধেক।"},
+            {q: "৩২. ১ থেকে ১০ পর্যন্ত কয়টি মৌলিক সংখ্যা আছে?", a: "৪", e: "২, ৩, ৫, ৭।"},
+            {q: "৩৩. ১০ জন লোক একটি কাজ ২০ দিনে করলে, ৫ জন লোক কত দিনে করবে?", a: "৪০", e: "লোক অর্ধেক হলে সময় দ্বিগুণ। ২০*২=৪০।"},
+            {q: "৩৪. ৫% হার মুনাফায় ৮০০০ টাকার ৩ বছরের মুনাফা কত?", a: "১২০০", e: "৮০০০ * ৩ * ০.০৫ = ১২০০।"},
+            {q: "৩৫. বর্গের এক বাহু ৪ মিটার হলে ক্ষেত্রফল কত?", a: "১৬", e: "বাহু² = ৪² = ১৬।"},
+            {q: "৩৬. x + 1/x = 2 হলে x এর মান কত?", a: "১", e: "১ + ১/১ = ২।"},
+            {q: "৩৭. ১০০ এর ১২.৫% কত?", a: "১২.৫", e: "সরাসরি মান।"},
+            {q: "৩৮. ৫:১০ এর লঘিষ্ঠ রূপ কোনটি?", a: "১:২", e: "৫ দিয়ে ভাগ করলে হয় ১:২।"},
+            {q: "৩৯. সমকোণী ত্রিভুজের সমকোণের বিপরীত বাহুকে কী বলে?", a: "অতিভুজ", e: "বৃহত্তম বাহু।"},
+            {q: "৪০. ৪টি কলার দাম ১০ টাকা হলে এক ডজন কলার দাম কত?", a: "৩০", e: "১২টি কলার দাম (১০/৪)*১২ = ৩০।"},
+            {q: "৪১. একটি ত্রিভুজের কয়টি মধ্যমা থাকে?", a: "৩", e: "প্রতিটি শীর্ষ থেকে একটি করে মোট ৩টি।"},
+            {q: "৪২. ১ কুইন্টাল = কত কেজি?", a: "১০০", e: "১০০ কেজি = ১ কুইন্টাল।"},
+            {q: "৪৩. ১ কিমি = কত মিটার?", a: "১০০০", e: "১ কিমি = ১০০০ মিটার।"},
+            {q: "৪৪. ৪, ৮, ১২ এর গসাগু কত?", a: "৪", e: "সবচেয়ে বড় সাধারণ ভাজক ৪।"},
+            {q: "৪৫. ১ সমকোণ = কত ডিগ্রি?", a: "৯০", e: "৯০ ডিগ্রি।"},
+            {q: "৪৬. কোন ক্ষুদ্রতম সংখ্যা ৪, ৫ ও ৬ দ্বারা বিভাজ্য?", a: "৬০", e: "৪, ৫, ৬ এর লসাগু ৬০।"},
+            {q: "৪৭. বৃত্তের ব্যাসার্ধ ৫ সেমি হলে ব্যাস কত?", a: "১০", e: "৫ * ২ = ১০ সেমি।"},
+            {q: "৪৮. ৩/৪ কে শতকরায় প্রকাশ করলে কত হয়?", a: "৭৫%", e: "(৩/৪)*১০০ = ৭৫%।"},
+            {q: "৪৯. (a+b)² এর মান কত?", a: "a²+2ab+b²", e: "বর্গের সূত্র।"},
+            {q: "৫০. রুট ১৬ এর মান কত?", a: "৪", e: "৪² = ১৬।"}
+        ];
+
+        function init() {
+            const list = document.getElementById('quiz-list');
+            questions.forEach((data, i) => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card animate__animated animate__zoomIn';
+                card.innerHTML = `
+                    <div class="question">${data.q}</div>
+                    <div class="input-group">
+                        <input type="text" id="ans-${i}" placeholder="উত্তর লিখুন...">
+                        <button onclick="check(${i})">যাচাই</button>
+                    </div>
+                    <div id="fb-${i}" class="feedback">
+                        <strong id="stat-${i}"></strong><br>
+                        <span class="explanation">📌 <b>ব্যাখ্যা:</b> ${data.e}</span>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+
+            const bg = document.getElementById('math-bg');
+            for(let i=0; i<15; i++) {
+                const s = document.createElement('div');
+                s.className = 'geometry';
+                s.style.width = s.style.height = (Math.random()*60 + 30) + 'px';
+                s.style.left = (Math.random()*100) + 'vw';
+                s.style.animationDelay = (Math.random()*10) + 's';
+                bg.appendChild(s);
+            }
+        }
+
+        window.check = function(i) {
+            const input = document.getElementById(`ans-${i}`).value.trim();
+            const fb = document.getElementById(`fb-${i}`);
+            const stat = document.getElementById(`stat-${i}`);
+            
+            // স্পেশাল ভ্যালু ০.০০০০০১ হ্যান্ডলিং
+            let target = questions[i].a;
+            if(target === "০.০০MDAwMQ==") target = "০.০০০০০১";
+
+            fb.style.display = 'block';
+            if(input == target || input == target.replace('০','0')) {
+                fb.className = 'feedback correct animate__animated animate__tada';
+                stat.innerText = "✅ সঠিক! আপনি গণিতে দক্ষ।";
+            } else {
+                fb.className = 'feedback wrong animate__animated animate__shakeX';
+                stat.innerText = `❌ ভুল! সঠিক উত্তর: ${target}`;
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
