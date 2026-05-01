@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Department Exam Prep - 2026</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --tax-gold: #f39c12;
+            --tax-dark: #1a1a2e;
+            --tax-card: #16213e;
+            --text: #e94560;
+        }
+
+        body {
+            font-family: 'SolaimanLipi', Arial, sans-serif;
+            background: var(--tax-dark);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            padding: 30px;
+            border: 2px solid var(--tax-gold);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            background: rgba(243, 156, 18, 0.05);
+            animation: fadeInDown 1s;
+        }
+
+        .quiz-card {
+            background: var(--tax-card);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-left: 5px solid var(--tax-gold);
+            transition: transform 0.3s ease;
+        }
+
+        .quiz-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(243, 156, 18, 0.2);
+        }
+
+        .question {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--tax-gold);
+            background: #fff;
+            color: #000;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: var(--tax-gold);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+            animation: flipInX 0.4s;
+        }
+
+        .correct { background: rgba(39, 174, 96, 0.4); border: 1px solid #27ae60; }
+        .wrong { background: rgba(231, 76, 60, 0.4); border: 1px solid #e74c3c; }
+
+        .explanation {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: #ddd;
+        }
+
+        /* 3D Falling Coins Background */
+        .coin {
+            position: fixed;
+            color: var(--tax-gold);
+            font-size: 24px;
+            z-index: -1;
+            animation: fall 10s infinite linear;
+            opacity: 0.2;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(-10vh) rotateY(0deg); }
+            to { transform: translateY(100vh) rotateY(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="coin-bg"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ কর অঞ্চল বিশেষ প্রস্তুতি (৫০টি প্রশ্ন)</h1>
+            <p>বিগত ২০২৩-২০২৬ সালে বিভিন্ন কর অঞ্চলের পরীক্ষায় বারবার আসা প্রশ্ন</p>
+        </div>
+        <div id="quiz-list"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {q: "১. TIN এর পূর্ণরূপ কী?", a: "Taxpayer's Identification Number", e: "এটি করদাতাদের শনাক্তকরণের জন্য ১২ ডিজিটের একটি নম্বর।"},
+            {q: "২. বাংলাদেশে জাতীয় ভ্যাট (VAT) দিবস কবে পালিত হয়?", a: "১০ ডিসেম্বর", e: "জাতীয় ভ্যাট দিবস ও ভ্যাট সপ্তাহ প্রতি বছর পালিত হয়।"},
+            {q: "৩. এনবিআর (NBR) এর পূর্ণরূপ কী?", a: "National Board of Revenue", e: "এটি অর্থ মন্ত্রণালয়ের অধীনে কর সংগ্রহের প্রধান কর্তৃপক্ষ।"},
+            {q: "৪. বাংলাদেশে আয়কর দিবস পালিত হয় কবে?", a: "৩০ নভেম্বর", e: "করদাতাদের সচেতন করতে এই দিনটি পালন করা হয়।"},
+            {q: "৫. ই-টিন (e-TIN) চালুর উদ্দেশ্য কী?", a: "অনলাইনে কর নিবন্ধন", e: "২০১৩ সাল থেকে ডিজিটাল পদ্ধতিতে টিন রেজিস্ট্রেশন শুরু হয়।"},
+            {q: "৬. 'Tax' শব্দটি কোন ভাষা থেকে এসেছে?", a: "ল্যাটিন", e: "ল্যাটিন শব্দ 'Taxare' থেকে এটি এসেছে।"},
+            {q: "৭. ভ্যাট (VAT) এর পূর্ণরূপ কী?", a: "Value Added Tax", e: "এটি একটি পরোক্ষ কর যা পণ্যের বর্ধিত মূল্যের ওপর ধার্য করা হয়।"},
+            {q: "৮. আয়কর কোন ধরনের কর?", a: "প্রত্যক্ষ কর", e: "যে কর সরাসরি করদাতার ওপর ধার্য করা হয় এবং তিনি নিজেই পরিশোধ করেন।"},
+            {q: "৯. বাংলাদেশে প্রথম কত সালে ভ্যাট চালু হয়?", a: "১৯৯১", e: "১ জুলাই ১৯৯১ সাল থেকে বাংলাদেশে ভ্যাট আইন কার্যকর হয়।"},
+            {q: "১০. কর অঞ্চল নোয়াখালী কোন বিভাগের অধীনে?", a: "চট্টগ্রাম", e: "ভৌগোলিকভাবে এটি চট্টগ্রাম বিভাগের একটি গুরুত্বপূর্ণ কর অঞ্চল।"},
+            {q: "১১. ব্যক্তি পর্যায়ে সর্বোচ্চ কর হার কত?", a: "২৫%", e: "আয়ের স্ল্যাব অনুযায়ী এটি নির্ধারিত হয় (সাম্প্রতিক বাজেট অনুযায়ী)।"},
+            {q: "১২. অর্থবিল কে পাস করেন?", a: "জাতীয় সংসদ", e: "বাজেট ঘোষণার সময় প্রতি বছর অর্থবিল পাস করা হয়।"},
+            {q: "১৩. এনবিআর (NBR) এর চেয়ারম্যান কে হন?", a: "সরকারের সিনিয়র সচিব", e: "সাধারণত অর্থ মন্ত্রণালয়ের অভ্যন্তরীণ সম্পদ বিভাগের সচিব এই দায়িত্ব পালন করেন।"},
+            {q: "১৪. ই-চালান (e-Challan) কী?", a: "সরকারি পাওনা জমা দেওয়ার অনলাইন মাধ্যম", e: "এর মাধ্যমে ট্রেজারি চালানের অর্থ ঘরে বসেই জমা দেওয়া যায়।"},
+            {q: "১৫. আয়কর রিটার্ন দাখিলের সময়সীমা সাধারণত কবে শেষ হয়?", a: "৩০ নভেম্বর", e: "একে 'ট্যাক্স ডে' বা কর দিবস বলা হয়।"},
+            {q: "১৬. 'উপকর কমিশনার' এর ইংরেজি পদবি কী?", a: "Deputy Commissioner of Taxes", e: "এটি কর অঞ্চলের একটি গুরুত্বপূর্ণ প্রথম শ্রেণীর গেজেটেড পদ।"},
+            {q: "১৭. এনবিআর (NBR) কত সালে প্রতিষ্ঠিত হয়?", a: "১৯৭২", e: "রাষ্ট্রপতির ৭৬ নং আদেশ বলে এটি প্রতিষ্ঠিত হয়।"},
+            {q: "১৮. কর ফাঁকি দেওয়া কোন ধরনের অপরাধ?", a: "ফৌজদারি ও দেওয়ানি", e: "কর ফাঁকি দিলে অর্থদণ্ড ও কারাদণ্ড উভয়ই হতে পারে।"},
+            {q: "১৯. উৎসে কর (TDS) বলতে কী বোঝায়?", a: "Tax Deducted at Source", e: "আয় প্রদানের সময় সরাসরি কর কেটে রাখা।"},
+            {q: "২০. কর অবকাশ (Tax Holiday) কী?", a: "নির্দিষ্ট সময়ের জন্য কর মওকুফ", e: "শিল্পায়নকে উৎসাহিত করতে সরকার এই সুবিধা দেয়।"},
+            {q: "২১. বিআইএন (BIN) এর পূর্ণরূপ কী?", a: "Business Identification Number", e: "এটি ভ্যাট নিবন্ধনের জন্য ব্যবহৃত হয়।"},
+            {q: "২২. আবগারি শুল্ক এর ইংরেজি কী?", a: "Excise Duty", e: "পণ্য উৎপাদন বা নির্দিষ্ট কিছু সেবার ওপর এই শুল্ক বসে।"},
+            {q: "২৩. বাংলাদেশে অর্থবছর শুরু হয় কবে থেকে?", a: "১ জুলাই", e: "১ জুলাই থেকে ৩০ জুন পর্যন্ত বাংলাদেশের অর্থবছর ধরা হয়।"},
+            {q: "২৪. কাস্টমস (Customs) এর সদর দপ্তর কোথায়?", a: "ঢাকা", e: "এটি এনবিআর এর সরাসরি তত্ত্বাবধানে কাজ করে।"},
+            {q: "২৫. অর্থ মন্ত্রণালয় কয়টি বিভাগে বিভক্ত?", a: "৪টি", e: "অর্থ বিভাগ, ব্যাংক ও আর্থিক প্রতিষ্ঠান বিভাগ, অভ্যন্তরীণ সম্পদ বিভাগ ও ইআরডি।"},
+            {q: "২৬. অগ্রিম কর এর ইংরেজি কী?", a: "Advance Tax", e: "আয় হওয়ার আগেই আনুমানিক আয়ের ওপর আগাম কর দেওয়া।"},
+            {q: "২৭. করযোগ্য আয় কী?", a: "মুক্ত সীমার উপরের আয়", e: "যে আয়ের ওপর কর দিতে হয়।"},
+            {q: "২৮. সম্পূরক শুল্ক কী?", a: "বিলাসবহুল দ্রব্যের ওপর বাড়তি শুল্ক", e: "Supplementary Duty হিসেবে পরিচিত।"},
+            {q: "২৯. জাতীয় রাজস্ব বোর্ডের সদর দপ্তর কোথায় অবস্থিত?", a: "আগারগাঁও, ঢাকা", e: "রাজস্ব ভবন এখন আগারগাঁওয়ে স্থানান্তরিত হয়েছে।"},
+            {q: "৩০. সারচার্জ (Surcharge) কী?", a: "করের ওপর অতিরিক্ত কর", e: "সম্পদ বেশি থাকলে করের ওপর সারচার্জ দিতে হয়।"},
+            {q: "৩১. ট্রেজারি চালান (Treasury Challan) কোথায় জমা দেওয়া হয়?", a: "বাংলাদেশ ব্যাংক বা সোনালী ব্যাংক", e: "সরকারি কোষাগারে টাকা জমার প্রধান মাধ্যম।"},
+            {q: "৩২. 'ট্যাক্স হোল্ডার' নয়, সঠিক শব্দ কোনটি?", a: "Taxpayer", e: "যিনি কর প্রদান করেন তাকে ট্যাক্সপেয়ার বলা হয়।"},
+            {q: "৩৩. এআইটি (AIT) এর পূর্ণরূপ কী?", a: "Advance Income Tax", e: "আমদানি বা নির্দিষ্ট ক্ষেত্রে আগেভাগে যে আয়কর নেওয়া হয়।"},
+            {q: "৩৪. কর মেলা সাধারণত কোন মাসে হয়?", a: "নভেম্বর", e: "রিটার্ন দাখিলের সুবিধার্থে এনবিআর এটি আয়োজন করে।"},
+            {q: "৩৫. 'আয়কর অধ্যাদেশ' কত সালের?", a: "১৯৮৪", e: "আগে ১৯৮৪ ছিল, বর্তমানে 'আয়কর আইন ২০২৩' কার্যকর।"},
+            {q: "৩৬. স্বর্ণ আমদানিতে কোন ধরনের কর দিতে হয়?", a: "ভ্যাট ও শুল্ক", e: "বাজেট অনুযায়ী এর হার পরিবর্তিত হয়।"},
+            {q: "৩৭. আয়কর দপ্তরে 'অফিস সহকারী' পদের কাজ কী?", a: "দাপ্তরিক ফাইল ও চিঠিপত্র ব্যবস্থাপনা", e: "এটি কর অঞ্চলের একটি গুরুত্বপূর্ণ সহায়ক পদ।"},
+            {q: "৩৮. কর রেয়াত (Tax Rebate) কী?", a: "বিনিয়োগের বিপরীতে কর ছাড়", e: "ডিপিএস বা সঞ্চয়পত্রে বিনিয়োগ করলে এই সুবিধা পাওয়া যায়।"},
+            {q: "৩৯. জিরো রিটার্ন (Zero Return) কী?", a: "শূন্য আয় দেখিয়ে রিটার্ন দাখিল", e: "আয় করযোগ্য না হলেও রিটার্ন দাখিল করা বাধ্যতামূলক হতে পারে।"},
+            {q: "৪০. রাজস্ব আদায়ের প্রধান উৎস কোনটি?", a: "ভ্যাট", e: "বাংলাদেশের অভ্যন্তরীণ রাজস্বের সিংহভাগ ভ্যাট থেকে আসে।"},
+            {q: "৪১. পিএসআই (PSI) এর পূর্ণরূপ কী?", a: "Pre-Shipment Inspection", e: "আমদানিকৃত পণ্য জাহাজে ওঠার আগের পরিদর্শন।"},
+            {q: "৪২. ডাম্পিং (Dumping) কী?", a: "উৎপাদন মূল্যের চেয়ে কম দামে রপ্তানি করা", e: "এটি ঠেকাতে এন্টি-ডাম্পিং ডিউটি বসানো হয়।"},
+            {q: "৪৩. কর আপীল ট্রাইব্যুনাল এর কাজ কী?", a: "কর সংক্রান্ত বিরোধ নিষ্পত্তি", e: "করদাতার দাবির সাথে কর অফিস একমত না হলে এখানে আপীল করা যায়।"},
+            {q: "৪৪. বাংলাদেশের বৃহত্তম স্থলবন্দর কোনটি?", a: "বেনাপোল", e: "যশোর জেলায় অবস্থিত এই বন্দর দিয়ে বেশি রাজস্ব আসে।"},
+            {q: "৪৫. ভ্যাট রেজিস্ট্রেশন সীমা কত?", a: "৩ কোটি টাকা", e: "বার্ষিক টার্নওভারের ওপর ভিত্তি করে এটি নির্ধারিত হয়।"},
+            {q: "৪৬. টিআরপি (TRP) কী?", a: "Tax Return Preparer", e: "যারা করদাতাদের রিটার্ন তৈরিতে সাহায্য করেন।"},
+            {q: "৪৭. আইটি (IT) আইন বলতে কী বোঝায়?", a: "Income Tax Law", e: "বাংলাদেশে বর্তমানে আয়কর আইন ২০২৩ প্রচলিত।"},
+            {q: "৪৮. কর অঞ্চল নোয়াখালী এর অধীনে কয়টি জেলা?", a: "৩টি", e: "নোয়াখালী, ফেনী ও লক্ষ্মীপুর।"},
+            {q: "৪৯. 'ট্যাক্স অ্যাসেসমেন্ট' মানে কী?", a: "কর নির্ধারণ", e: "করদাতার দাখিলকৃত রিটার্ন পরীক্ষা করে কর চূড়ান্ত করা।"},
+            {q: "৫০. করদাতার প্রধান দায়িত্ব কী?", a: "সঠিক সময়ে সঠিক তথ্য দিয়ে রিটার্ন দেওয়া", e: "এটি নাগরিক দায়িত্ব ও আইনি বাধ্যবাধকতা।"}
+        ];
+
+        function init() {
+            const list = document.getElementById('quiz-list');
+            questions.forEach((data, i) => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card animate__animated animate__fadeInLeft';
+                card.style.animationDelay = (i * 0.1) + 's';
+                card.innerHTML = `
+                    <div class="question">${data.q}</div>
+                    <div class="input-group">
+                        <input type="text" id="ans-${i}" placeholder="উত্তর লিখুন...">
+                        <button onclick="check(${i})">যাচাই</button>
+                    </div>
+                    <div id="fb-${i}" class="feedback">
+                        <strong id="res-${i}"></strong><br>
+                        <span class="explanation">💡 <b>নোট:</b> ${data.e}</span>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+
+            // Add falling coins
+            const bg = document.getElementById('coin-bg');
+            for(let i=0; i<20; i++) {
+                const c = document.createElement('div');
+                c.className = 'coin';
+                c.innerText = '৳';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                c.style.animationDelay = Math.random() * 5 + 's';
+                bg.appendChild(c);
+            }
+        }
+
+        window.check = function(i) {
+            const val = document.getElementById(`ans-${i}`).value.trim().toLowerCase();
+            const correct = questions[i].a.toLowerCase();
+            const fb = document.getElementById(`fb-${i}`);
+            const res = document.getElementById(`res-${i}`);
+            
+            fb.style.display = 'block';
+            // Simple logic to match part of string for long answers
+            if(val.length > 2 && (correct.includes(val) || val.includes(correct))) {
+                fb.className = 'feedback correct animate__animated animate__rubberBand';
+                res.innerText = "✅ একদম সঠিক উত্তর!";
+            } else {
+                fb.className = 'feedback wrong animate__animated animate__shakeX';
+                res.innerText = `❌ ভুল হয়েছে। সঠিক উত্তর: ${questions[i].a}`;
+            }
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

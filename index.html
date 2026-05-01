@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Zone Noakhali - Exam Portal 2026</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --accent: #f39c12;
+            --card-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'SolaimanLipi', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f2027;
+            background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+            margin: 0;
+            padding: 0;
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* 3D Moving Particles Background */
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--primary);
+            animation: zoomIn 1s;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #bdc3c7;
+            margin-bottom: 50px;
+        }
+
+        /* 3D Card Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            perspective: 1000px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.5s ease;
+            transform-style: preserve-3d;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .card:hover {
+            transform: rotateY(15deg) rotateX(10deg) scale(1.05);
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.4);
+        }
+
+        .card i {
+            font-size: 50px;
+            display: block;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+
+        .card:hover i {
+            transform: translateZ(50px);
+            color: var(--accent);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            pointer-events: none;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: #ecf0f1;
+            pointer-events: none;
+        }
+
+        .btn-start {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 25px;
+            background: var(--primary);
+            border-radius: 50px;
+            font-weight: bold;
+            color: #000;
+            transition: 0.3s;
+        }
+
+        .card:hover .btn-start {
+            background: white;
+            box-shadow: 0 0 15px white;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 100px;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="animate__animated animate__pulse animate__infinite">🏛️ TAX ZONE NOAKHALI @bdjobsvilla</h1>
+            <p>www.youtube.com/@bdjobsvilla</p>
+        </div>
+
+        <div class="grid">
+            <!-- 1. বাংলা -->
+            <a href="TaxNoakhali_Prep.html" class="card animate__animated animate__fadeInLeft">
+                <i>📖</i>
+                <h2>বাংলা প্রস্তুতি</h2>
+                <p>বিগত বছরের বাছাইকৃত ৫০টি লিখিত ও নৈর্ব্যক্তিক প্রশ্ন।</p>
+                <div class="btn-start">প্রবেশ করুন</div>
+            </a>
+
+            <!-- 2. ইংরেজি -->
+            <a href="Tax_English_Prep.html" class="card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
+                <i>🔤</i>
+                <h2>English Prep</h2>
+                <p>Grammar, Idioms & Translations for Tax Office Exams.</p>
+                <div class="btn-start">Start Now</div>
+            </a>
+
+            <!-- 3. গণিত -->
+            <a href="Tax_Math_Prep.html" class="card animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
+                <i>🔢</i>
+                <h2>গণিত সমাধান</h2>
+                <p>সহজ টেকনিক ও ব্যাখ্যাসহ ৫০টি গুরুত্বপূর্ণ গাণিতিক সমস্যা।</p>
+                <div class="btn-start">প্রবেশ করুন</div>
+            </a>
+
+            <!-- 4. সাধারণ জ্ঞান -->
+            <a href="Tax_GK_Prep.html" class="card animate__animated animate__fadeInRight" style="animation-delay: 0.6s;">
+                <i>🌍</i>
+                <h2>সাধারণ জ্ঞান</h2>
+                <p>বাংলাদেশ ও আন্তর্জাতিক সাম্প্রতিক ঘটনাবলি ও মেগা প্রজেক্ট।</p>
+                <div class="btn-start">প্রবেশ করুন</div>
+            </a>
+
+            <!-- 5. কর বিভাগীয় স্পেশাল -->
+            <a href="Tax_Department_Special.html" class="card animate__animated animate__zoomIn" style="animation-delay: 0.8s; grid-column: span 1;">
+                <i>💼</i>
+                <h2>কর বিভাগীয় স্পেশাল</h2>
+                <p>এনবিআর, আয়কর আইন ও কর অঞ্চল ভিত্তিক বিশেষ ৫০টি প্রশ্ন।</p>
+                <div class="btn-start">প্রবেশ করুন</div>
+            </a>
+        </div>
+
+        <footer>
+            &copy; 2026 কর অঞ্চল নোয়াখালী নিয়োগ প্রস্তুতি পোর্টাল | @bdjobsvilla
+        </footer>
+    </div>
+
+    <script>
+        // Simple Particle Animation for 3D Background Effect
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+                this.color = 'rgba(0, 210, 255, 0.5)';
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.size > 0.2) this.size -= 0.01;
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

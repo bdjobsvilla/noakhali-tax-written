@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কর অঞ্চল নোয়াখালী নিয়োগ প্রস্তুতি - ২০২৬</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #00b894;
+            --wrong: #ff7675;
+            --bg: #dfe6e9;
+        }
+
+        body {
+            font-family: 'SolaimanLipi', Arial, sans-serif;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .quiz-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            transition: transform 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px) rotateX(2deg);
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            color: #2d3436;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 12px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #4834d4;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: bounceIn 0.5s;
+        }
+
+        .correct { background: #d1f2eb; border-left: 6px solid var(--secondary); color: #0b5345; }
+        .incorrect { background: #fadbd8; border-left: 6px solid var(--wrong); color: #78281f; }
+
+        .explanation {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            color: #636e72;
+            display: block;
+        }
+
+        /* Floating 3D Circles */
+        .circle {
+            position: fixed;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            z-index: -1;
+            animation: float 25s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0.5); }
+            100% { transform: translateY(-10vh) scale(1.2); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bg-animation"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ কর অঞ্চল নোয়াখালী প্রস্তুতি</h1>
+            <p>বাংলা লিখিত পরীক্ষার ৫০টি গুরুত্বপূর্ণ প্রশ্ন (২০২৩-২০২৬)</p>
+        </div>
+        
+        <div id="quiz-list"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {q: "১. 'কবর' কবিতার লেখক কে?", a: "জসীমউদ্দীন", e: "এটি পল্লীকবি জসীমউদ্দীনের বিখ্যাত কবিতা।"},
+            {q: "২. 'নদী ও নারী' উপন্যাসের রচয়িতা কে?", a: "হুমায়ুন কবির", e: "এটি তাঁর শ্রেষ্ঠ উপন্যাস।"},
+            {q: "৩. বাংলা গদ্যের জনক কে?", a: "ঈশ্বরচন্দ্র বিদ্যাসাগর", e: "তিনি প্রথম বাংলায় যতিচিহ্নের সার্থক প্রয়োগ করেন।"},
+            {q: "৪. 'মৃন্ময়ী' রবীন্দ্রনাথের কোন গল্পের চরিত্র?", a: "সমাপ্তি", e: "সমাপ্তি ছোটগল্পের কেন্দ্রীয় নারী চরিত্র।"},
+            {q: "৫. সন্ধি বিচ্ছেদ করুন: 'সঞ্চয়'?", a: "সম + চয়", e: "ব্যঞ্জন সন্ধির নিয়ম।"},
+            {q: "৬. 'অগ্নিবীণা' কাব্যগ্রন্থের প্রথম কবিতা কোনটি?", a: "প্রলয়োল্লাস", e: "কাজী নজরুল ইসলামের প্রথম কাব্যগ্রন্থ এটি।"},
+            {q: "৭. 'অপমান' শব্দের 'অপ' উপসর্গটি কী অর্থে ব্যবহৃত?", a: "বিপরীত", e: "মান এর বিপরীত অপমান।"},
+            {q: "৮. 'চাঁদের হাট' বাগধারার অর্থ কী?", a: "আনন্দের প্রাচুর্য", e: "প্রিয়জনদের সমাগমকে চাঁদের হাট বলে।"},
+            {q: "৯. কারক কত প্রকার?", a: "৬", e: "কর্তৃ, কর্ম, করণ, সম্প্রদান, অপাদান ও অধিকরণ।"},
+            {q: "১০. 'একাদশে বৃহস্পতি' এর অর্থ কী?", a: "সৌভাগ্যের বিষয়", e: "চাকরির পরীক্ষায় এটি বারবার আসে।"},
+            {q: "১১. 'গীতাঞ্জলি' কত সালে নোবেল পায়?", a: "১৯১৩", e: "রবীন্দ্রনাথ ঠাকুর এশিয়ার প্রথম নোবেল বিজয়ী।"},
+            {q: "১২. 'যা বলা হয়নি' - এক কথায় কী হবে?", a: "অনুক্ত", e: "বাক্য সংকোচন থেকে গুরুত্বপূর্ণ।"},
+            {q: "১৩. 'তপোবন' এর সন্ধি বিচ্ছেদ কী?", a: "তপঃ + বন", e: "এটি বিসর্গ সন্ধির উদাহরণ।"},
+            {q: "১৪. 'জীবনানন্দ দাশ' প্রধানত কিসের কবি?", a: "প্রকৃতির", e: "তাঁকে রূপসী বাংলার কবি বলা হয়।"},
+            {q: "১৫. 'অরণ্যে রোদন' এর অর্থ কী?", a: "বৃথা চেষ্টা", e: "নিষ্ফল আবেদনও বলা হয়।"},
+            {q: "১৬. 'রাজলক্ষ্মী' চরিত্রের স্রষ্টা কে?", a: "শরৎচন্দ্র চট্টোপাধ্যায়", e: "শ্রীকান্ত উপন্যাসের জনপ্রিয় চরিত্র।"},
+            {q: "১৭. 'বিষাদ সিন্ধু' কার রচনা?", a: "মীর মশাররফ হোসেন", e: "এটি কারবালার যুদ্ধ নিয়ে রচিত মহাকাব্যিক উপন্যাস।"},
+            {q: "১৮. 'পায়ের আওয়াজ পাওয়া যায়' কি জাতীয় রচনা?", a: "নাটক", e: "সৈয়দ শামসুল হকের কাব্যনাট্য।"},
+            {q: "১৯. সমাস প্রধানত কত প্রকার?", a: "৬", e: "দ্বন্দ্ব, কর্মধারয়, তৎপুরুষ, বহুব্রীহি, দ্বিগু ও অব্যয়ীভাব।"},
+            {q: "২০. 'চক্ষুদান করা' বাগধারার অর্থ কী?", a: "চুরি করা", e: "ব্যঙ্গাত্মক অর্থে চুরি করা বোঝায়।"},
+            {q: "২১. 'শরতের শিশির' অর্থ কী?", a: "সুসময়ের বন্ধু", e: "ক্ষণস্থায়ী অর্থেও ব্যবহৃত হয়।"},
+            {q: "২২. 'ধন্য ধান্যে পুষ্পে ভরা' গানটির রচয়িতা কে?", a: "দ্বিজেন্দ্রলাল রায়", e: "দেশাত্মবোধক এই গানটি অত্যন্ত জনপ্রিয়।"},
+            {q: "২৩. বাংলা বর্ণমালায় মাত্রাংশ বর্ণ কয়টি?", a: "৮", e: "অর্ধমাত্রা বর্ণ ৮টি।"},
+            {q: "২৪. 'আমানত' কোন ভাষার শব্দ?", a: "আরবি", e: "দাপ্তরিক কাজে এই শব্দটি প্রায়ই আসে।"},
+            {q: "২৫. 'শেষের কবিতা' কি ধরনের রচনা?", a: "উপন্যাস", e: "রবীন্দ্রনাথ ঠাকুরের বিখ্যাত রোমান্টিক উপন্যাস।"},
+            {q: "২৬. 'হাতটান' এর অর্থ কী?", a: "চুরির অভ্যাস", e: "বাগধারা অংশে এটি কমন।"},
+            {q: "২৭. 'সবুজ পত্র' পত্রিকার সম্পাদক কে?", a: "প্রমথ চৌধুরী", e: "চলিত ভাষার আন্দোলনে এর ভূমিকা অপরিসীম।"},
+            {q: "২৮. 'উপকারির অপকার করে যে'?", a: "কৃতঘ্ন", e: "আর যে উপকার স্বীকার করে সে কৃতজ্ঞ।"},
+            {q: "২৯. 'মহাকীর্তি' এর সঠিক সমাস কোনটি?", a: "কর্মধারয়", e: "মহা যে কীর্তি = মহাকীর্তি।"},
+            {q: "৩০. 'পাখি' শব্দের সমার্থক কোনটি?", a: "বিহঙ্গ", e: "খেচর ও দ্বিজ-ও পাখির সমার্থক।"},
+            {q: "৩১. 'শুদ্ধ বানান' কোনটি? (সমীচীন)", a: "সমীচীন", e: "উভয় ই-কার দীর্ঘ (ী) হবে।"},
+            {q: "৩২. 'তটিনী' শব্দের অর্থ কী?", a: "নদী", e: "তরঙ্গিনী বা প্রবাহিনীও বলা হয়।"},
+            {q: "৩৩. 'আয়ব্যয়' কোন সমাস?", a: "দ্বন্দ্ব", e: "আয় ও ব্যয় = আয়ব্যয়।"},
+            {q: "৩৪. 'আগুন' এর সমার্থক শব্দ কী?", a: "অনল", e: "পাবক, অগ্নি, হুতাশন।"},
+            {q: "৩৫. 'বেগম রোকেয়া'র জন্ম কত সালে?", a: "১৮৮০", e: "রংপুরের পায়রাবন্দে তাঁর জন্ম।"},
+            {q: "৩৬. 'বন্যেরা বনে সুন্দর, শিশুরা মাতৃক্রোড়ে' কার উক্তি?", a: "সঞ্জীবচন্দ্র চট্টোপাধ্যায়", e: "পালামৌ ভ্রমণ কাহিনী থেকে নেওয়া।"},
+            {q: "৩৭. বাংলা লিপির উৎস কী?", a: "ব্রাহ্মী লিপি", e: "কুটিল লিপি হয়ে বাংলা লিপি এসেছে।"},
+            {q: "৩৮. 'মেঘ' শব্দের সমার্থক শব্দ কী?", a: "বারিদা", e: "জলধর বা জীমূত-ও বলা হয়।"},
+            {q: "৩৯. 'মাছরাঙার কলঙ্ক' অর্থ কী?", a: "অনেক অপরাধীর মধ্যে একজনকে দোষী সাব্যস্ত করা", e: "বাগধারাটি বিশেষ অর্থবহ।"},
+            {q: "৪০. 'চর্যাপদ' কে আবিষ্কার করেন?", a: "হরপ্রসাদ শাস্ত্রী", e: "নেপালের রাজদরবার থেকে উদ্ধার করেন।"},
+            {q: "৪১. 'পাথরে পাঁচকিল' বাগধারার অর্থ কী?", a: "সুসময়", e: "ভাগ্যের আনুকূল্য বোঝায়।"},
+            {q: "৪২. 'নীলাম্বরী' কোন সমাস?", a: "বহুব্রীহি", e: "নীল অম্বর যার।"},
+            {q: "৪৩. 'ধ্বনি' উচ্চারণের একককে কী বলে?", a: "অক্ষর", e: "সিলেবল বা অক্ষর বলা হয়।"},
+            {q: "৪৪. 'উদ্ধত' শব্দের বিপরীত শব্দ কী?", a: "বিনীত", e: "বিপরীত শব্দ হিসেবে এটি কমন।"},
+            {q: "৪৫. 'হাতে খড়ি' কোন সমাস?", a: "বহুব্রীহি", e: "এটি অলুক বহুব্রীহি সমাস।"},
+            {q: "৪৬. 'সারমেয়' শব্দের অর্থ কী?", a: "কুকুর", e: "বাংলা সাহিত্যের পুরনো শব্দ।"},
+            {q: "৪৭. 'এক যে ছিল রাজা' - এখানে 'যে' কোন পদ?", a: "অব্যয়", e: "এটি পদান্বয়ী অব্যয়।"},
+            {q: "৪৮. 'লালসালু' উপন্যাসের লেখক কে?", a: "সৈয়দ ওয়ালীউল্লাহ", e: "মজিদ এই উপন্যাসের প্রধান চরিত্র।"},
+            {q: "৪৯. 'সংশপ্তক' কার রচনা?", a: "শহীদুল্লাহ কায়সার", e: "এটি একটি কালজয়ী উপন্যাস।"},
+            {q: "৫০. 'বাংলা একাডেমি' কত সালে প্রতিষ্ঠিত হয়?", a: "১৯৫৫", e: "৩ ডিসেম্বর ১৯৫৫ সালে প্রতিষ্ঠিত হয়।"}
+        ];
+
+        function initQuiz() {
+            const list = document.getElementById('quiz-list');
+            questions.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card animate__animated animate__fadeInUp';
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.innerHTML = `
+                    <div class="question-text">${item.q}</div>
+                    <div class="input-group">
+                        <input type="text" id="in-${index}" placeholder="উত্তর লিখুন...">
+                        <button onclick="check(${index})">যাচাই</button>
+                    </div>
+                    <div id="fb-${index}" class="feedback">
+                        <b id="status-${index}"></b><br>
+                        <span class="explanation">💡 <b>ব্যাখ্যা:</b> ${item.e}</span>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+
+            // Add background circles
+            const bg = document.getElementById('bg-animation');
+            for(let i=0; i<10; i++) {
+                const c = document.createElement('div');
+                c.className = 'circle';
+                c.style.width = c.style.height = Math.random()*150 + 50 + 'px';
+                c.style.left = Math.random()*100 + 'vw';
+                c.style.animationDelay = Math.random()*20 + 's';
+                bg.appendChild(c);
+            }
+        }
+
+        window.check = function(i) {
+            const input = document.getElementById(`in-${i}`).value.trim();
+            const fb = document.getElementById(`fb-${i}`);
+            const status = document.getElementById(`status-${i}`);
+            
+            fb.style.display = 'block';
+            if(input === questions[i].a) {
+                fb.className = 'feedback correct animate__animated animate__tada';
+                status.innerText = "✅ চমৎকার! সঠিক উত্তর।";
+            } else {
+                fb.className = 'feedback incorrect animate__animated animate__shakeX';
+                status.innerText = `❌ ভুল হয়েছে। সঠিক উত্তর: ${questions[i].a}`;
+            }
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

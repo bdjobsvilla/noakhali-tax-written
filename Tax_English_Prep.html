@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Preparation - Tax Office Recruitment</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2980b9;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --glass: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #2980b9);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeInDown 1s;
+        }
+
+        .quiz-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform-style: preserve-3d;
+            transition: 0.3s;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .question {
+            font-size: 1.15rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 10px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover { background: #1a5276; }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .correct { background: #d4edda; color: #155724; border-left: 5px solid var(--success); }
+        .wrong { background: #f8d7da; color: #721c24; border-left: 5px solid var(--danger); }
+
+        .explanation {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #555;
+            font-style: italic;
+        }
+
+        /* 3D Moving Circles */
+        .shape {
+            position: fixed;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            z-index: -1;
+            animation: move 20s infinite linear;
+        }
+
+        @keyframes move {
+            from { transform: translateY(100vh) rotate(0deg); }
+            to { transform: translateY(-10vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bg-shapes"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>📝 English Preparation</h1>
+            <p>কর অঞ্চল ও সরকারি চাকরি নিয়োগ পরীক্ষা (২০২৩-২০২৬)</p>
+        </div>
+        <div id="quiz-container"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {q: "1. What is the Synonym of 'Incredible'?", a: "Unbelievable", e: "Incredible অর্থ অবিশ্বাস্য। সরকারি পরীক্ষায় এটি বহুবার এসেছে।"},
+            {q: "2. Fill in: 'He has no appetite ___ food.'", a: "for", e: "Appetite-এর পর এপ্রোপ্রিয়েট প্রিপজিশন 'for' বসে।"},
+            {q: "3. What is the Antonym of 'Gentle'?", a: "Rude", e: "Gentle (ভদ্র), Rude (অভদ্র/অশিষ্ট)।"},
+            {q: "4. Correct Spelling: (লেফটেন্যান্ট)", a: "Lieutenant", e: "Mnemonic: Lie-u-ten-ant (মিথ্যা তুমি ১০ পিঁপড়া)।"},
+            {q: "5. 'A man of straw' means?", a: "A worthless man", e: "বাগধারাটির অর্থ হলো অপদার্থ ব্যক্তি।"},
+            {q: "6. Change Voice: 'He teaches us English'?", a: "We are taught English by him", e: "Double object থাকলে যেকোনো একটিকে subject করা যায়।"},
+            {q: "7. What is the noun form of 'Pure'?", a: "Purity", e: "Pure (Adjective), Purity (Noun)।"},
+            {q: "8. 'Identify the gender of 'Orphan'?", a: "Common", e: "Orphan (এতিম) ছেলে বা মেয়ে উভয়ই হতে পারে।"},
+            {q: "9. Fill in: 'The boy takes ___ his father.'", a: "after", e: "Take after মানে দেখতে সদৃশ হওয়া (Resemble)।"},
+            {q: "10. 'Once in a blue moon' means?", a: "Very rarely", e: "খুবই কদাচিৎ বা প্রায় দেখাই যায় না এমন।"},
+            {q: "11. Choose the correct spelling: (কমিটি)", a: "Committee", e: "মনে রাখুন: ডাবল m, ডাবল t, ডাবল e।"},
+            {q: "12. What is the plural of 'Radius'?", a: "Radii", e: "Latin মূল শব্দ যার শেষে us থাকে, বহুবচনে i হয়।"},
+            {q: "13. 'Look forward to' means?", a: "Expect with pleasure", e: "এর পর সবসময় verb-এর সাথে ing যুক্ত হয়।"},
+            {q: "14. Antonym of 'Vivid'?", a: "Dull", e: "Vivid অর্থ উজ্জ্বল বা প্রাণবন্ত, বিপরীত হলো Dull বা ম্লান।"},
+            {q: "15. Fill in: 'He died ___ overeating.'", a: "from", e: "বেশি খেয়ে মারা গেলে 'die from' হয়।"},
+            {q: "16. 'Black and blue' means?", a: "Mercilessly", e: "নির্মমভাবে প্রহার করা অর্থে ব্যবহৃত হয়।"},
+            {q: "17. What is the adjective form of 'Sun'?", a: "Solar", e: "Sun (Noun), Solar (Adjective)।"},
+            {q: "18. Who wrote 'Gulliver's Travels'?", a: "Jonathan Swift", e: "এটি একটি বিখ্যাত স্যাটায়ার উপন্যাস।"},
+            {q: "19. 'Call it a day' means?", a: "To stop working", e: "সেদিনের মতো কাজ সমাপ্ত করা।"},
+            {q: "20. Verb form of 'Beautiful'?", a: "Beautify", e: "Beautify অর্থ সুন্দর করা।"},
+            {q: "21. Fill in: 'It has been raining ___ morning.'", a: "since", e: "নির্দিষ্ট সময় বুঝালে Since বসে।"},
+            {q: "22. 'To end in smoke' means?", a: "To come to nothing", e: "ব্যর্থতায় পর্যবসিত হওয়া।"},
+            {q: "23. Correct Spelling: (বুরোক্রেসি)", a: "Bureaucracy", e: "মনে রাখুন: Bureau + cracy।"},
+            {q: "24. 'Pass away' means?", a: "Die", e: "মারা যাওয়া (Euphemism)।"},
+            {q: "25. Which one is singular? (Data, Agenda, Radius)", a: "Radius", e: "Data ও Agenda হলো plural।"},
+            {q: "26. Synonym of 'Cordial'?", a: "Amiable", e: "Cordial অর্থ আন্তরিক বা হৃদ্যতাপূর্ণ।"},
+            {q: "27. Fill in: 'Bread and butter ___ my favorite.'", a: "is", e: "একক ধারণা বুঝালে verb singular হয়।"},
+            {q: "28. What is the feminine of 'Horse'?", a: "Mare", e: "Horse (ঘোড়া), Mare (ঘোটকী)।"},
+            {q: "29. 'Slow and steady ___ the race.'", a: "wins", e: "এটি একটি চিরন্তন সত্য প্রবাদ।"},
+            {q: "30. Who is the 'Poet of Nature'?", a: "William Wordsworth", e: "ইংরেজি সাহিত্যে প্রকৃতিপ্রেমী কবি তিনি।"},
+            {q: "31. 'By and large' means?", a: "Mostly", e: "প্রধানত বা মোটের ওপর।"},
+            {q: "32. Antonym of 'Fragile'?", a: "Strong", e: "Fragile অর্থ ভঙ্গুর, বিপরীত হলো শক্তিশালী।"},
+            {q: "33. Fill in: 'I am not envious ___ his wealth.'", a: "of", e: "Envious-এর সাথে of বসে।"},
+            {q: "34. 'Null and void' means?", a: "Invalid", e: "অকার্যকর বা বাতিল।"},
+            {q: "35. Correct Spelling: (অ্যাসাইনমেন্ট)", a: "Assignment", e: "গভর্নমেন্ট জব টেস্টে এটি কমন।"},
+            {q: "36. Change Voice: 'Do it'?", a: "Let it be done", e: "Imperative sentence-এর ভয়েস চেঞ্জ।"},
+            {q: "37. 'At arm's length' means?", a: "At a distance", e: "নিরাপদ দূরত্ব বজায় রাখা।"},
+            {q: "38. What is the synonym of 'Abundance'?", a: "Plenty", e: "Abundance মানে প্রচুর।"},
+            {q: "39. Fill in: 'He is ___ one-eyed man.'", a: "a", e: "O-এর উচ্চারণ 'ওয়া' এর মতো হলে A বসে।"},
+            {q: "40. 'Pros and cons' means?", a: "Merits and demerits", e: "খুঁটিনাটি বা ভালো-মন্দ।"},
+            {q: "41. Correct Spelling: (পজেশন)", a: "Possession", e: "মনে রাখুন: ডাবল s দুইবার আছে।"},
+            {q: "42. 'Blue blood' means?", a: "Aristocratic birth", e: "আভিজাত্য বা উচ্চবংশীয়।"},
+            {q: "43. 'Look after' means?", a: "Take care of", e: "দেখাাশোনা করা।"},
+            {q: "44. Verb of 'Success'?", a: "Succeed", e: "Success (Noun), Succeed (Verb)।"},
+            {q: "45. Fill in: 'We should abide ___ the rules.'", a: "by", e: "Abide by মানে মেনে চলা।"},
+            {q: "46. What is the noun form of 'Know'?", a: "Knowledge", e: "Know (Verb), Knowledge (Noun)।"},
+            {q: "47. 'In a nutshell' means?", a: "Briefly", e: "সংক্ষেপে বলা।"},
+            {q: "48. Antonym of 'Ancient'?", a: "Modern", e: "Ancient (প্রাচীন), Modern (আধুনিক)।"},
+            {q: "49. 'Out of order' means?", a: "Not working", e: "বিকল বা নষ্ট।"},
+            {q: "50. Synonym of 'Candid'?", a: "Frank", e: "Candid মানে অকপট বা স্পষ্টভাষী।"}
+        ];
+
+        function init() {
+            const container = document.getElementById('quiz-container');
+            questions.forEach((data, index) => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card animate__animated animate__fadeInUp';
+                card.style.animationDelay = (index * 0.1) + 's';
+                card.innerHTML = `
+                    <div class="question">${data.q}</div>
+                    <div class="input-area">
+                        <input type="text" id="input-${index}" placeholder="Write answer here...">
+                        <button onclick="checkAnswer(${index})">Verify</button>
+                    </div>
+                    <div id="feedback-${index}" class="feedback">
+                        <strong id="status-${index}"></strong><br>
+                        <span class="explanation">💡 ${data.e}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Shapes logic
+            const bg = document.getElementById('bg-shapes');
+            for(let i=0; i<15; i++) {
+                const s = document.createElement('div');
+                s.className = 'shape';
+                s.style.width = s.style.height = (Math.random()*100 + 50) + 'px';
+                s.style.left = (Math.random()*100) + 'vw';
+                s.style.animationDuration = (Math.random()*10 + 10) + 's';
+                bg.appendChild(s);
+            }
+        }
+
+        window.checkAnswer = function(i) {
+            const userAns = document.getElementById(`input-${i}`).value.trim().toLowerCase();
+            const correctAns = questions[i].a.toLowerCase();
+            const fb = document.getElementById(`feedback-${i}`);
+            const status = document.getElementById(`status-${i}`);
+
+            fb.style.display = 'block';
+            if (userAns === correctAns) {
+                fb.className = 'feedback correct animate__animated animate__tada';
+                status.innerText = "✅ Correct!";
+            } else {
+                fb.className = 'feedback wrong animate__animated animate__shakeX';
+                status.innerText = "❌ Incorrect! Correct: " + questions[i].a;
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
